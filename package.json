@@ -2,6 +2,10 @@
   "name": "light-scripts",
   "version": "1.0.0",
   "description": "Build scripts for Lighting Beetle* light framework",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightingbeetle/light-scripts"
+  },
   "scripts": {
     "lint-staged": "lint-staged",
     "test": "echo \"Error: no test specified\" && exit 1"
