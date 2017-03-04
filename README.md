@@ -54,7 +54,7 @@ Via config file, default configuration can be customized if necessary.
 If custom configuration is not needed, `light.config.js` can be omitted.
 
 ### Tasks
-Tasks should be run in main project folder, which dependents on `light-scripts`.
+Tasks should be run in main project folder, which depends on `light-scripts`.
 
 Main gulp tasks:
 
@@ -72,8 +72,6 @@ gulp serve
 ```
 gulp -T
 ```
-
-Tasks should be run in main project folder, which dependents on `light-scripts`.
 
 ## License
 
