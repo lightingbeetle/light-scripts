@@ -462,12 +462,12 @@ const defaultConfig = (paths, config) => ({
 
 class Config {
   constructor() {
-    const configPath = path.join(cwd(), 'light.config.js');
+    const configPath = path.join(cwd, 'light.config.js');
 
     const defaultPaths = {
-      app: path.posix.join(process.cwd(), 'app'),
-      tmp: path.posix.join(process.cwd(), '.tmp'),
-      dist: path.posix.join(process.cwd(), 'dist'),
+      app: path.posix.join(cwd, 'app'),
+      tmp: path.posix.join(cwd, '.tmp'),
+      dist: path.posix.join(cwd, 'dist'),
       data: 'data',
       styleguideData: '',
       fonts: 'fonts',
