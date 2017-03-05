@@ -88,5 +88,7 @@ module.exports = function handleError(error, silent, ...args) {
   }
 
   // Keep gulp from hanging on this task
-  this.emit('end');
+  if (this.emit) {
+    this.emit('end');
+  }
 };
