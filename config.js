@@ -9,6 +9,7 @@ const flags = require('./utils/flags');
 
 const { getFlag } = flags;
 const cwd = process.cwd();
+const pkg = require(path.join(cwd, 'package.json')); // eslint-disable-line import/no-dynamic-require
 
 const browserSync = ({ app, dist, tmp }, { browserSync: config = {} }) => () => {
   // Rewrite rules enables removing .html extensions in development.
@@ -270,7 +271,27 @@ const scripts = ({
       }, {
         test: /\.js$/,
         exclude: /node_modules|bower_components/,
-        use: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          query: {
+            presets: [
+              [
+                'env',
+                {
+                  modules: false,
+                  loose: true,
+                  targets: {
+                    browsers: pkg.browserslist,
+                  },
+                },
+              ],
+            ],
+            plugins: [
+              'transform-object-rest-spread',
+              'transform-class-properties',
+            ],
+          },
+        },
       }].concat(webpackModuleRules),
     },
     plugins: ([
