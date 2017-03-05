@@ -4,7 +4,7 @@ const { clean } = require('./../config.js');
 
 // Cleaning task
 
-const cleanTask = () => del.bind(null, clean());
+const cleanTask = () => del.bind(null, clean(), { force: true });
 
 module.exports = {
   cleanTask,
