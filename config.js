@@ -8,6 +8,7 @@ const _ = require('lodash');
 const flags = require('./utils/flags');
 
 const { getFlag } = flags;
+const cwd = process.cwd();
 
 const browserSync = ({ app, dist, tmp }, { browserSync: config = {} }) => () => {
   // Rewrite rules enables removing .html extensions in development.
@@ -247,6 +248,7 @@ const scripts = ({
   const otherConfig = _.omit(config, ['webpackModuleRules', 'webpackPlugins']);
 
   const defaultConfig = {
+    context: cwd,
     entry: getEntriesFromGlob(path.posix.join(app, scriptsPath, '/*.js')),
     output: {
       filename: '[name].js',
@@ -259,7 +261,12 @@ const scripts = ({
         enforce: 'pre',
         test: /\.js$/,
         exclude: /node_modules|bower_components|scripts\/plugins/,
-        use: 'eslint-loader',
+        use: {
+          loader: 'eslint-loader',
+          options: {
+            cwd,
+          },
+        },
       }, {
         test: /\.js$/,
         exclude: /node_modules|bower_components/,
