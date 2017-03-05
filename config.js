@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const glob = require('glob');
 const modRewrite = require('connect-modrewrite');
 const pug = require('pug');
@@ -461,6 +462,8 @@ const defaultConfig = (paths, config) => ({
 
 class Config {
   constructor() {
+    const configPath = path.join(cwd(), 'light.config.js');
+
     const defaultPaths = {
       app: path.posix.join(process.cwd(), 'app'),
       tmp: path.posix.join(process.cwd(), '.tmp'),
@@ -480,8 +483,11 @@ class Config {
 
     let config = {};
     let paths = {};
+    let myConfig = null;
 
-    const myConfig = require(path.posix.join(process.cwd(), 'light.config.js')); // eslint-disable-line
+    if (fs.existsSync(configPath)) {
+      myConfig = require(configPath); // eslint-disable-line
+    }
 
     if (typeof (myConfig) === 'function') {
       ({ config = {}, paths = {} } =
