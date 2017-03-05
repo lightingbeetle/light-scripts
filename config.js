@@ -295,7 +295,6 @@ const scripts = ({
       }].concat(webpackModuleRules),
     },
     plugins: ([
-      new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         process: {},
         'process.env': {},
@@ -305,6 +304,7 @@ const scripts = ({
         name: 'vendor',
       }),
     ]).concat(process.env.NODE_ENV === 'production' ? [
+      new webpack.NoEmitOnErrorsPlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.UglifyJsPlugin({
         mangle: true,
