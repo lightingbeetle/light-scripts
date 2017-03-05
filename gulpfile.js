@@ -29,7 +29,7 @@ gulp.task('build-size', [
   'build-size:css',
   'build-size:js',
   'build-size:img',
-], buildSizeTask);
+], buildSizeTask(gulp));
 gulp.task('build', [], buildTask(gulp));
 
 gulp.task('clean', [], cleanTask(gulp));
