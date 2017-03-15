@@ -55,25 +55,33 @@ const buildSize = ({
   buildSize: config = {},
 }) => () => {
   const defaultConfig = {
-    allSrc: path.posix.join(dist, '/**/*'),
-    allCfg: {
+    all: {
+      src: path.posix.join(dist, '/**/*'),
+      gulpSizeConfig: {
       title: 'build',
       gzip: true,
     },
-    cssSrc: path.posix.join(dist, styles, '/**/*'),
-    cssCfg: {
+    },
+    css: {
+      src: path.posix.join(dist, styles, '/**/*'),
+      gulpSizeConfig: {
       title: 'CSS',
       gzip: true,
     },
-    imgSrc: path.posix.join(dist, images, '/**/*'),
-    imgCfg: {
+    },
+    img: {
+      src: path.posix.join(dist, images, '/**/*'),
+      gulpSizeConfig: {
       title: 'Images',
       gzip: false,
     },
-    jsSrc: path.posix.join(dist, scripts, '/**/*'),
-    jsCfg: {
+    },
+    js: {
+      src: path.posix.join(dist, scripts, '/**/*'),
+      gulpSizeConfig: {
       title: 'JS',
       gzip: true,
+    },
     },
   };
 

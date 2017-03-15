@@ -8,34 +8,34 @@ const { buildSize } = require('./../config.js');
 
 // Output size of dist folder
 const buildSizeCssTask = gulp => () => {
-  const { cssSrc, cssCfg } = buildSize();
+  const { css } = buildSize();
 
-  return gulp.src(cssSrc)
-    .pipe(size(cssCfg));
+  return gulp.src(css.src)
+    .pipe(size(css.gulpSizeConfig));
 };
 
 // Output size of dist folder
 const buildSizeJsTask = gulp => () => {
-  const { jsSrc, jsCfg } = buildSize();
+  const { js } = buildSize();
 
-  return gulp.src(jsSrc)
-    .pipe(size(jsCfg));
+  return gulp.src(js.src)
+    .pipe(size(js.gulpSizeConfig));
 };
 
 // Output size of dist folder
 const buildSizeImgTask = gulp => () => {
-  const { imgSrc, imgCfg } = buildSize();
+  const { img } = buildSize();
 
-  return gulp.src(imgSrc)
-    .pipe(size(imgCfg));
+  return gulp.src(img.src)
+    .pipe(size(img.gulpSizeConfig));
 };
 
 // Output size of dist folder
 const buildSizeTask = gulp => () => {
-  const { allSrc, allCfg } = buildSize();
+  const { all } = buildSize();
 
-  return gulp.src(allSrc)
-    .pipe(size(allCfg));
+  return gulp.src(all.src)
+    .pipe(size(all.gulpSizeConfig));
 };
 
 // run build in sequence - this shoud be implemented in Gulp 4 natively
