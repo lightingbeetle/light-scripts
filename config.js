@@ -25,27 +25,25 @@ const browserSync = ({ app, dist, tmp }, { browserSync: config = {} }) => () => 
     '(.*)$ $1.html [L]', // redirect routes ends with string without trailing slash to original html
   ];
 
-  const { plugins = [], rewriteRules = [] } = config;
-  const otherConfig = _.omit(config, ['plugins', 'rewriteRules']);
-
   const defaultConfig = {
+    rewriteRules: defaultRewriteRules,
     server: {
       baseDir: getFlag('isBuild') ? dist : [tmp, app],
     },
     notify: false,
     debugInfo: false,
     host: 'localhost',
-    middleware: [
-      modRewrite([...defaultRewriteRules, ...rewriteRules]),
-    ],
-    plugins: [
-      ...plugins,
-    ].concat(process.env.NODE_ENV === 'development' ? [
+    middleware: [],
+    plugins: [].concat(process.env.NODE_ENV === 'development' ? [
       bsPrettyMessage,
     ] : []),
   };
 
-  return Object.assign({}, defaultConfig, otherConfig);
+  const newConfig = Object.assign({}, defaultConfig, config);
+
+  newConfig.middleware.push(modRewrite(newConfig.rewriteRules));
+
+  return newConfig;
 };
 
 const buildSize = ({
