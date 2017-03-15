@@ -5,7 +5,6 @@ const modRewrite = require('connect-modrewrite');
 const pug = require('pug');
 const webpack = require('webpack');
 const bsPrettyMessage = require('bs-pretty-message');
-const _ = require('lodash');
 const flags = require('./utils/flags');
 
 const { getFlag } = flags;
@@ -58,30 +57,30 @@ const buildSize = ({
     all: {
       src: path.posix.join(dist, '/**/*'),
       gulpSizeConfig: {
-      title: 'build',
-      gzip: true,
-    },
+        title: 'build',
+        gzip: true,
+      },
     },
     css: {
       src: path.posix.join(dist, styles, '/**/*'),
       gulpSizeConfig: {
-      title: 'CSS',
-      gzip: true,
-    },
+        title: 'CSS',
+        gzip: true,
+      },
     },
     img: {
       src: path.posix.join(dist, images, '/**/*'),
       gulpSizeConfig: {
-      title: 'Images',
-      gzip: false,
-    },
+        title: 'Images',
+        gzip: false,
+      },
     },
     js: {
       src: path.posix.join(dist, scripts, '/**/*'),
       gulpSizeConfig: {
-      title: 'JS',
-      gzip: true,
-    },
+        title: 'JS',
+        gzip: true,
+      },
     },
   };
 
@@ -248,14 +247,25 @@ const scripts = ({
   scripts: scriptsPath,
   tmp,
 }, { scripts: config = {} }) => () => {
-  const {
-    webpackModuleRules = [],
-    webpackPlugins = [],
-  } = config;
-
-  const otherConfig = _.omit(config, ['webpackModuleRules', 'webpackPlugins']);
-
   const defaultConfig = {
+    babelConfig: {
+      presets: [
+        [
+          'env',
+          {
+            modules: false,
+            loose: true,
+            targets: {
+              browsers: pkg.browserslist,
+            },
+          },
+        ],
+      ],
+      plugins: [
+        'transform-object-rest-spread',
+        'transform-class-properties',
+      ],
+    },
     context: cwd,
     entry: getEntriesFromGlob(path.posix.join(app, scriptsPath, '/*.js')),
     output: {
@@ -275,31 +285,7 @@ const scripts = ({
             cwd,
           },
         },
-      }, {
-        test: /\.js$/,
-        exclude: /node_modules|bower_components/,
-        use: {
-          loader: 'babel-loader',
-          query: {
-            presets: [
-              [
-                'env',
-                {
-                  modules: false,
-                  loose: true,
-                  targets: {
-                    browsers: pkg.browserslist,
-                  },
-                },
-              ],
-            ],
-            plugins: [
-              'transform-object-rest-spread',
-              'transform-class-properties',
-            ],
-          },
-        },
-      }].concat(webpackModuleRules),
+      }],
     },
     plugins: ([
       new webpack.DefinePlugin({
@@ -328,13 +314,26 @@ const scripts = ({
         },
         output: { comments: false },
       }),
-    ] : []).concat(webpackPlugins),
+    ] : []),
     devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
     performance: false,
     watch: getFlag('isWatch'),
   };
 
-  return Object.assign({}, defaultConfig, otherConfig);
+  const newConfig = Object.assign({}, defaultConfig, config);
+
+  // Inject babel loader with custom config
+  const babelLoader = {
+    test: /\.js$/,
+    exclude: /node_modules|bower_components/,
+    use: {
+      loader: 'babel-loader',
+      query: newConfig.babelConfig,
+    },
+  };
+  newConfig.module.rules.push(babelLoader);
+
+  return newConfig;
 };
 
 const styles = ({

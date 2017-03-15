@@ -1,6 +1,7 @@
 const gutil = require('gulp-util');
 
 const webpack = require('webpack');
+const _ = require('lodash');
 
 const { scripts } = require('./../config.js');
 const { getFlag } = require('./../utils/flags');
@@ -10,7 +11,9 @@ const browserSync = require('./browserSync').browserSync;
 let firstRun = true;
 
 const scriptsTask = () => (done) => {
-  webpack(scripts(), (err, stats) => {
+  const webpackConfig = _.omit(scripts(), 'babelConfig');
+
+  webpack(webpackConfig, (err, stats) => {
     if (err) {
       handleError.call(this, err);
     }
