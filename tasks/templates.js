@@ -24,7 +24,7 @@ let isYamlError = false;
 
 // Compile pug to html
 
-const templatesTask = gulp => () => {
+const templatesTask = gulp => (done) => {
   const {
     src,
     base,
@@ -62,7 +62,7 @@ const templatesTask = gulp => () => {
   // check if this is first run of this task
   isFirstRun = (isFirstRun === null);
 
-  return gulp.src(src, { base })
+  gulp.src(src, { base })
     .pipe(plumber(handleError))
     .pipe(gulpif(getFlag('isWatch') && !isExternalChange, changed('.tmp', { extension: '.html' })))
     .pipe(gulpif(getFlag('isWatch') && !isExternalChange, cached('pug')))
@@ -90,7 +90,12 @@ const templatesTask = gulp => () => {
     }))
     .pipe(pug(cfg))
     .pipe(gulp.dest(dest))
-    .pipe(gulpif(() => !isYamlError && getFlag('isWatch'), browserSync.stream({ once: true })));
+    .on('finish', () => {
+      if (!isYamlError && getFlag('isWatch')) {
+        browserSync.reload({ once: true });
+      }
+      done();
+    });
 };
 
 // Concat *.json file to single data.json
