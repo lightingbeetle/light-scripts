@@ -283,6 +283,7 @@ const scripts = ({
           loader: 'eslint-loader',
           options: {
             cwd,
+            fix: getFlag('lintFix'),
             emitWarning: !(process.env.NODE_ENV === 'production'),
           },
         },

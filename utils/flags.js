@@ -3,6 +3,7 @@ class Flags {
     this.flags = {
       isBuild: false,
       isWatch: false,
+      lintFix: true,
     };
 
     this.getFlag = this.getFlag.bind(this);
