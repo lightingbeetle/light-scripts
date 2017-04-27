@@ -345,6 +345,7 @@ const styles = ({
   tmp,
 }, { styles: config = {} }) => () => {
   const defaultConfig = {
+    lintSrc: path.posix.join(app, stylesPath, '**/*.scss'),
     src: path.posix.join(app, stylesPath, '*.scss'),
     dest: getFlag('isBuild')
       ? path.posix.join(dist, stylesPath)

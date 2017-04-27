@@ -3,6 +3,7 @@ class Flags {
     this.flags = {
       isBuild: false,
       isWatch: false,
+      lintCSS: true,
       lintFix: true,
     };
 

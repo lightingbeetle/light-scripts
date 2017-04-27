@@ -16,7 +16,7 @@ const { clearCacheTask, imagesTask } = require('./tasks/images');
 const { modernizrTask } = require('./tasks/modernizr');
 const { scriptsTask } = require('./tasks/scripts');
 const { serveTask, serveDistTask } = require('./tasks/serve');
-const { stylesTask } = require('./tasks/styles');
+const { stylesTask, stylesLintTask } = require('./tasks/styles');
 const { templatesTask, templatesPrepareDataTask } = require('./tasks/templates');
 const { watchTask } = require('./tasks/watch');
 
@@ -54,7 +54,8 @@ gulp.task('scripts', [], scriptsTask(gulp));
 gulp.task('serve', [], serveTask(gulp));
 gulp.task('serve:dist', [], serveDistTask(gulp));
 
-gulp.task('styles', [], stylesTask(gulp));
+gulp.task('styles:lint', [], stylesLintTask(gulp));
+gulp.task('styles', ['styles:lint'], stylesTask(gulp));
 
 gulp.task('templates', ['templates:prepare-data'], templatesTask(gulp));
 gulp.task('templates:prepare-data', [], templatesPrepareDataTask(gulp));

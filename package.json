@@ -54,6 +54,7 @@
     "gulp-sass": "~3.1.0",
     "gulp-size": "~2.1.0",
     "gulp-sourcemaps": "~2.6.0",
+    "gulp-stylelint": "~3.9.0",
     "gulp-svgstore": "~6.1.0",
     "gulp-util": "~3.0.8",
     "gulp-yaml-merge": "adammockor/gulp-yaml-merge",
@@ -126,5 +127,8 @@
         "experimentalObjectRestSpread": true
       }
     }
+  },
+  "stylelint": {
+    "rules": {}
   }
 }

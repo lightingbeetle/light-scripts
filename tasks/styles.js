@@ -1,4 +1,5 @@
 const sass = require('gulp-sass');
+const gulpStylelint = require('gulp-stylelint');
 
 const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
@@ -13,6 +14,21 @@ const { styles } = require('./../config.js');
 const browserSync = require('./browserSync.js').browserSync;
 const handleError = require('./../utils/handleError.js');
 const { getFlag } = require('./../utils/flags');
+
+const stylesLintTask = gulp => () => {
+  const {
+    lintSrc,
+  } = styles();
+
+  return gulp.src(lintSrc)
+    .pipe(plumber(handleError))
+    .pipe(
+      gulpif(
+        getFlag('lintCSS'),
+        gulpStylelint()
+      )
+    );
+};
 
 const stylesTask = gulp => () => {
   let stylesError = false;
@@ -49,4 +65,5 @@ const stylesTask = gulp => () => {
 
 module.exports = {
   stylesTask,
+  stylesLintTask,
 };
