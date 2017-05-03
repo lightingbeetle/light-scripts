@@ -43,6 +43,12 @@ const templatesTask = gulp => (done) => {
   const iconsHash = Object
     .keys(iconsPaths)
     .map(key => iconsPaths[key])
+    .reduce((acc, file) => {
+      if (fs.existsSync(file)) {
+        acc.push(file);
+      }
+      return acc;
+    }, [])
     .reduce((acc, file) => (acc + md5File.sync(file)), '');
 
   const isExternalChange = (
