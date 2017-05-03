@@ -35,7 +35,7 @@ const templatesTask = gulp => (done) => {
     dest,
   } = templates();
 
-  const { dataPath, helpersPath, additionalData } = templatesData();
+  const { dataPath, helpersPath, requires, additionalData } = templatesData();
 
   // get data file hash with cached data file to determine if file changes
   const dataFileHash = md5File.sync(dataPath);
@@ -91,8 +91,8 @@ const templatesTask = gulp => (done) => {
       const yamlData = yaml.safeLoad(
         fs.readFileSync(dataPath, 'utf8')
       );
-      const helpers = require(helpersPath); // eslint-disable-line
-      return Object.assign({}, yamlData, helpers, { iconsPaths }, additionalData);
+      const helpers = fs.existsSync(helpersPath) ? require(helpersPath) : {}; // eslint-disable-line
+      return Object.assign({}, yamlData, helpers, requires, { iconsPaths }, additionalData);
     }))
     .pipe(pug(cfg))
     .pipe(gulp.dest(dest))

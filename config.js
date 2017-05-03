@@ -296,8 +296,8 @@ const scripts = ({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       }),
       fs.existsSync(path.posix.join(app, scriptsPath, 'vendor.js')) ?
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
+        new webpack.optimize.CommonsChunkPlugin({
+          name: 'vendor',
         })
         : null,
     ]).concat(process.env.NODE_ENV === 'production' ? [
@@ -431,6 +431,7 @@ const templatesData = ({
     dataName: 'data.yaml',
     dataPath: path.posix.join(tmp, 'data/data.yaml'),
     helpersPath: path.posix.join(app, views, styleguide, 'helpers', 'helpers.js'),
+    requires: {},
     additionalData: { flags },
   };
 
