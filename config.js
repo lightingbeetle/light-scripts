@@ -346,6 +346,14 @@ const styles = ({
 }, { styles: config = {} }) => () => {
   const defaultConfig = {
     lintSrc: path.posix.join(app, stylesPath, '**/*.scss'),
+    lintCfg: {
+      reporters: [
+        {
+          formatter: 'string',
+          console: true,
+        },
+      ],
+    },
     src: path.posix.join(app, stylesPath, '*.scss'),
     dest: getFlag('isBuild')
       ? path.posix.join(dist, stylesPath)

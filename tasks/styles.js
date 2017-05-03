@@ -18,6 +18,7 @@ const { getFlag } = require('./../utils/flags');
 const stylesLintTask = gulp => () => {
   const {
     lintSrc,
+    lintCfg,
   } = styles();
 
   return gulp.src(lintSrc)
@@ -25,7 +26,7 @@ const stylesLintTask = gulp => () => {
     .pipe(
       gulpif(
         getFlag('lintCSS'),
-        gulpStylelint()
+        gulpStylelint(lintCfg)
       )
     );
 };
