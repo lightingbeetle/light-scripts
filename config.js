@@ -295,9 +295,11 @@ const scripts = ({
         'process.env': {},
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       }),
+      fs.existsSync(path.posix.join(app, scriptsPath, 'vendor.js')) ?
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
-      }),
+        })
+        : null,
     ]).concat(process.env.NODE_ENV === 'production' ? [
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
@@ -316,7 +318,7 @@ const scripts = ({
         },
         output: { comments: false },
       }),
-    ] : []),
+    ] : []).filter(Boolean),
     devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
     performance: false,
     watch: getFlag('isWatch'),
