@@ -1,6 +1,6 @@
 {
   "name": "light-scripts",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Build scripts for Lighting Beetle* light framework",
   "repository": {
     "type": "git",

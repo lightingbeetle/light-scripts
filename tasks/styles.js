@@ -46,7 +46,12 @@ const stylesTask = gulp => () => {
       stylesError = true;
       handleError.call(this, error);
     }))
-    .pipe(sourcemaps.init())
+    .pipe(
+      gulpif(
+        !getFlag('isBuild'),
+        sourcemaps.init()
+      )
+    )
     .pipe(sass(sassCfg))
     .pipe(postcss([
       autoprefixer(autoprefixerCfg),
@@ -54,7 +59,12 @@ const stylesTask = gulp => () => {
     ].concat(process.env.NODE_ENV === 'production' ? [
       cssnano(),
     ] : [])))
-    .pipe(sourcemaps.write())
+    .pipe(
+      gulpif(
+        !getFlag('isBuild'),
+        sourcemaps.write()
+      )
+    )
     .pipe(gulp.dest(dest))
     .pipe(
       gulpif(
