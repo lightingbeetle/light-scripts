@@ -30,7 +30,7 @@ const templatesTask = gulp => (done) => {
     base,
     filterPaths,
     iconsPaths,
-    cfg,
+    pugCfg,
     pugInheritanceCfg,
     dest,
   } = templates();
@@ -94,7 +94,7 @@ const templatesTask = gulp => (done) => {
       const helpers = fs.existsSync(helpersPath) ? require(helpersPath) : {}; // eslint-disable-line
       return Object.assign({}, yamlData, helpers, requires, { iconsPaths }, additionalData);
     }))
-    .pipe(pug(cfg))
+    .pipe(pug(pugCfg))
     .pipe(gulp.dest(dest))
     .on('finish', () => {
       if (!isYamlError && getFlag('isWatch')) {
