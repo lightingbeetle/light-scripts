@@ -8,6 +8,7 @@ const {
   buildSizeTask,
   buildTask,
 } = require('./tasks/build');
+const { cacheBustTask } = require('./tasks/cacheBust');
 const { cleanTask } = require('./tasks/clean');
 const { copyTask } = require('./tasks/copy');
 const { deployTask } = require('./tasks/deploy');
@@ -31,6 +32,8 @@ gulp.task('build-size', [
   'build-size:img',
 ], buildSizeTask(gulp));
 gulp.task('build', [], buildTask(gulp));
+
+gulp.task('cache-bust', [], cacheBustTask(gulp));
 
 gulp.task('clean', [], cleanTask(gulp));
 

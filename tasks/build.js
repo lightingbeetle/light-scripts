@@ -50,6 +50,7 @@ const buildTask = gulp => (done) => {
     ['icons'],
     ['styles', 'scripts', 'images', 'copy', 'templates'],
     ['modernizr'],
+    'cache-bust',
     'build-size',
     () => {
       notifier.notify({

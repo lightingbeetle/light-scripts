@@ -87,6 +87,24 @@ const buildSize = ({
   return Object.assign({}, defaultConfig, config);
 };
 
+const cacheBust = ({
+  dist,
+}, { cacheBust: config = {} }) => () => {
+  const defaultConfig = {
+    src: [
+      path.posix.join(dist, '**/*.css'),
+      path.posix.join(dist, '**/*.js'),
+      path.posix.join(dist, '**/*.html'),
+    ],
+    cfg: {
+      dontRenameFile: ['.html'],
+    },
+    dest: dist,
+  };
+
+  return Object.assign({}, defaultConfig, config);
+};
+
 // Be carefull what you cleaning!
 const clean = ({ tmp, dist }, { clean: config }) => () => config || [tmp, dist];
 
@@ -466,6 +484,7 @@ const watch = ({
 const defaultConfig = (paths, config) => ({
   browserSync: browserSync(paths, config),
   buildSize: buildSize(paths, config),
+  cacheBust: cacheBust(paths, config),
   clean: clean(paths, config),
   copy: copy(paths, config),
   deploy: deploy(paths, config),
