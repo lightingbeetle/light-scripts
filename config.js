@@ -98,6 +98,7 @@ const cacheBust = ({
     ],
     cfg: {
       dontRenameFile: ['.html'],
+      dontUpdateReference: ['.html'],
     },
     dest: dist,
   };
