@@ -336,6 +336,7 @@ const scripts = ({
           ],
         },
         output: { comments: false },
+        sourceMap: true,
       }),
     ] : []).filter(Boolean),
     devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
