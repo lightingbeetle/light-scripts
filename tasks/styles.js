@@ -57,7 +57,7 @@ const stylesTask = gulp => () => {
       autoprefixer(autoprefixerCfg),
       inlineSvg(inlineSvgCfg),
     ].concat(process.env.NODE_ENV === 'production' ? [
-      cssnano(),
+      cssnano({ zindex: false }),
     ] : [])))
     .pipe(
       gulpif(
