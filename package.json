@@ -24,7 +24,7 @@
     "connect-modrewrite": "~0.10.1",
     "cssnano": "~3.10.0",
     "del": "~3.0.0",
-    "eslint": "~3.19.0",
+    "eslint": "~4.18.2",
     "eslint-loader": "~1.7.1",
     "glob": "~7.1.2",
     "gulp": "~3.9.1",
