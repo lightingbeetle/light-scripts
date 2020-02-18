@@ -1,30 +1,35 @@
-let runSequence = require('run-sequence');
 const { setFlag } = require('./../utils/flags');
 
+const { iconsTask } = require('./icons');
+const { stylesTask } = require('./styles');
+const { scriptsTask } = require('./scripts');
+const { templatesTask } = require('./templates');
+const { modernizrTask } = require('./modernizr');
+const { browserSyncTask } = require('./browserSync');
+const { watchTask } = require('./watch');
+const { buildTask } = require('./build');
+
 // Serve project with watching and livereload
-const serveTask = gulp => (done) => {
+const serveTask = (gulp) => {
   setFlag({ isWatch: true });
-  runSequence = runSequence.use(gulp);
 
-  runSequence(
-    ['icons'],
-    ['styles', 'scripts', 'templates'],
-    'modernizr',
-    'browser-sync',
-    'watch',
-    done // eslint-disable-line
+  return gulp.series(
+    iconsTask(gulp),
+    gulp.parallel(
+      stylesTask(gulp),
+      scriptsTask(gulp),
+      templatesTask(gulp)
+    ),
+    modernizrTask(gulp),
+    browserSyncTask(gulp),
+    watchTask(gulp)
   );
 };
 
-const serveDistTask = gulp => (done) => {
-  runSequence = runSequence.use(gulp);
-
-  runSequence(
-    'build',
-    'browser-sync',
-    done // eslint-disable-line
-  );
-};
+const serveDistTask = (gulp) => gulp.series(
+  buildTask(gulp),
+  browserSyncTask(gulp)
+);
 
 module.exports = {
   serveTask,

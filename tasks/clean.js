@@ -1,10 +1,11 @@
 const del = require('del');
 
-const { clean } = require('./../config.js');
+const { clean: cleanConfig } = require('./../config.js');
 
 // Cleaning task
-
-const cleanTask = () => del.bind(null, clean(), { force: true });
+const cleanTask = () => async function clean(done) {
+  await del(cleanConfig(), { force: true }, done);
+};
 
 module.exports = {
   cleanTask,

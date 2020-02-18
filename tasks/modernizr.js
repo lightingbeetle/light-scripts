@@ -1,13 +1,13 @@
-const modernizr = require('gulp-modernizr');
+const gulpModernizr = require('gulp-modernizr');
 
-const { modernizr: modernizrCfg } = require('./../config.js');
+const { modernizr: modernizrConfig } = require('./../config.js');
 
 // Lean Modernizr build
-const modernizrTask = gulp => () => {
-  const { src, cfg, dest } = modernizrCfg();
+const modernizrTask = (gulp) => function modernizr() {
+  const { src, cfg, dest } = modernizrConfig();
 
   return gulp.src(src)
-    .pipe(modernizr(cfg))
+    .pipe(gulpModernizr(cfg))
     .pipe(gulp.dest(dest));
 };
 

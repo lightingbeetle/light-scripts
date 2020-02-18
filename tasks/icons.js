@@ -3,18 +3,18 @@ const imagemin = require('gulp-imagemin');
 const cheerio = require('gulp-cheerio');
 const rename = require('gulp-rename');
 
-const { icons } = require('./../config.js');
+const { icons: iconsConfig } = require('./../config.js');
 const handleError = require('./../utils/handleError.js');
 
 // App icons
-const iconsAppTask = gulp => () => {
+const iconsAppTask = (gulp) => function iconsApp() {
   const {
     srcApp,
     iconPrefix,
     cheerioCfg,
     imageminCfg,
     dest,
-  } = icons();
+  } = iconsConfig();
 
   return gulp
     .src(srcApp)
@@ -26,16 +26,15 @@ const iconsAppTask = gulp => () => {
     .on('error', handleError);
 };
 
-
 // Styleguide icons
-const iconsStyleguideTask = gulp => () => {
+const iconsStyleguideTask = (gulp) => function iconsStyleguide() {
   const {
     srcStyleguide,
     iconPrefix,
     cheerioCfg,
     imageminCfg,
     dest,
-  } = icons();
+  } = iconsConfig();
 
   return gulp
     .src(srcStyleguide)
@@ -47,7 +46,13 @@ const iconsStyleguideTask = gulp => () => {
     .on('error', handleError);
 };
 
+const iconsTask = (gulp) => gulp.parallel(
+  iconsAppTask(gulp),
+  iconsStyleguideTask(gulp)
+);
+
 module.exports = {
+  iconsTask,
   iconsAppTask,
   iconsStyleguideTask,
 };

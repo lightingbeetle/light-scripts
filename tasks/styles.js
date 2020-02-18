@@ -10,16 +10,16 @@ const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const inlineSvg = require('postcss-inline-svg');
 
-const { styles } = require('./../config.js');
-const browserSync = require('./browserSync.js').browserSync;
+const { styles: stylesConfig } = require('./../config.js');
+const { browserSync } = require('./browserSync.js');
 const handleError = require('./../utils/handleError.js');
 const { getFlag } = require('./../utils/flags');
 
-const stylesLintTask = gulp => () => {
+const stylesLintTask = (gulp) => function stylesLint() {
   const {
     lintSrc,
     lintCfg,
-  } = styles();
+  } = stylesConfig();
 
   return gulp.src(lintSrc)
     .pipe(plumber(handleError))
@@ -31,7 +31,7 @@ const stylesLintTask = gulp => () => {
     );
 };
 
-const stylesTask = gulp => () => {
+const stylesBuildTask = (gulp) => function stylesBuild() {
   let stylesError = false;
   const {
     autoprefixerCfg,
@@ -39,7 +39,7 @@ const stylesTask = gulp => () => {
     inlineSvgCfg,
     sassCfg,
     src,
-  } = styles();
+  } = stylesConfig();
 
   return gulp.src(src)
     .pipe(plumber(function stylesErrorHandler(error) {
@@ -74,7 +74,13 @@ const stylesTask = gulp => () => {
     );
 };
 
+const stylesTask = (gulp) => gulp.series(
+  stylesLintTask(gulp),
+  stylesBuildTask(gulp)
+);
+
 module.exports = {
   stylesTask,
+  stylesBuildTask,
   stylesLintTask,
 };
