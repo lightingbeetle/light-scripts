@@ -38,7 +38,7 @@ const browserSync = ({ app, dist, tmp }, { browserSync: config = {} }) => () => 
     ] : []),
   };
 
-  const newConfig = Object.assign({}, defaultConfig, config);
+  const newConfig = { ...defaultConfig, ...config };
 
   newConfig.middleware.push(modRewrite(newConfig.rewriteRules));
 
@@ -84,7 +84,7 @@ const buildSize = ({
     },
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const cacheBust = ({
@@ -103,7 +103,7 @@ const cacheBust = ({
     dest: dist,
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 // Be carefull what you cleaning!
@@ -128,7 +128,7 @@ const copy = ({
     dest: dist,
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const deploy = ({ dist }, { deploy: config = {} }) => () => {
@@ -142,7 +142,7 @@ const deploy = ({ dist }, { deploy: config = {} }) => () => {
     },
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const icons = ({
@@ -187,7 +187,7 @@ const icons = ({
     },
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const images = ({ app, images: imagesPath, dist }, { images: config = {} }) => () => {
@@ -215,7 +215,7 @@ const images = ({ app, images: imagesPath, dist }, { images: config = {} }) => (
     },
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const modernizr = ({
@@ -245,7 +245,7 @@ const modernizr = ({
     },
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const getEntriesFromGlob = (globPath) => {
@@ -267,10 +267,11 @@ const scripts = ({
   tmp,
 }, { scripts: config = {} }) => () => {
   const defaultConfig = {
+    mode: process.env.NODE_ENV,
     babelConfig: {
       presets: [
         [
-          'env',
+          '@babel/preset-env',
           {
             modules: false,
             loose: true,
@@ -281,8 +282,8 @@ const scripts = ({
         ],
       ],
       plugins: [
-        'transform-object-rest-spread',
-        'transform-class-properties',
+        '@babel/plugin-proposal-class-properties',
+        '@babel/plugin-proposal-object-rest-spread',
       ],
     },
     context: cwd,
@@ -308,43 +309,35 @@ const scripts = ({
         },
       }],
     },
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            chunks: 'initial',
+            test: path.resolve(__dirname, 'node_modules'),
+            name: 'vendor',
+            enforce: true,
+          },
+        },
+      },
+      minimize: process.env.NODE_ENV === 'production',
+    },
     plugins: ([
       new webpack.DefinePlugin({
         process: {},
         'process.env': {},
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       }),
-      fs.existsSync(path.posix.join(app, scriptsPath, 'vendor.js')) ?
-        new webpack.optimize.CommonsChunkPlugin({
-          name: 'vendor',
-        })
-        : null,
     ]).concat(process.env.NODE_ENV === 'production' ? [
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        mangle: true,
-        compress: {
-          warnings: false,
-          pure_funcs: [
-            'classCallCheck',
-            '_possibleConstructorReturn',
-            '_classCallCheck',
-            'Object.freeze',
-            'invariant',
-            'warning',
-          ],
-        },
-        output: { comments: false },
-        sourceMap: true,
-      }),
     ] : []).filter(Boolean),
     devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
     performance: false,
     watch: getFlag('isWatch'),
   };
 
-  const newConfig = Object.assign({}, defaultConfig, config);
+  const newConfig = { ...defaultConfig, ...config };
 
   // Inject babel loader with custom config
   const babelLoader = {
@@ -385,7 +378,7 @@ const styles = ({
     inlineSvgCfg: { removeFill: true },
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const templates = ({
@@ -395,7 +388,7 @@ const templates = ({
   tmp,
   views,
 }, { templates: config = {} }) => () => {
-  pug.filters.code = block => (
+  pug.filters.code = (block) => (
     block
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -432,7 +425,7 @@ const templates = ({
     ],
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const templatesData = ({
@@ -455,14 +448,13 @@ const templatesData = ({
     additionalData: { flags },
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const watch = ({
   app,
   data,
   icons: iconsPath,
-  scripts: scriptsPath,
   styleguide,
   styles: stylesPath,
   views,
@@ -480,7 +472,7 @@ const watch = ({
     ],
   };
 
-  return Object.assign({}, defaultConfig, config);
+  return { ...defaultConfig, ...config };
 };
 
 const defaultConfig = (paths, config) => ({
@@ -530,11 +522,14 @@ class Config {
     }
 
     if (typeof (myConfig) === 'function') {
-      ({ config = {}, paths = {} } =
-        myConfig(defaultPaths, defaultConfig(defaultPaths, {}), flags));
+      ({ config = {}, paths = {} } = myConfig(
+        defaultPaths,
+        defaultConfig(defaultPaths, {}),
+        flags
+      ));
     }
 
-    return defaultConfig(Object.assign({}, defaultPaths, paths), config);
+    return defaultConfig({ ...defaultPaths, ...paths }, config);
   }
 }
 
