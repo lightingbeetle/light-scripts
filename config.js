@@ -537,11 +537,7 @@ class Config {
     }
 
     if (typeof (myConfig) === 'function') {
-      ({ config = {}, paths = {} } = myConfig(
-        defaultPaths,
-        defaultConfig(defaultPaths, {}),
-        flags
-      ));
+      ({ config = {}, paths = {} } = myConfig(defaultPaths, defaultConfig(defaultPaths, {}), flags)); // eslint-disable-line max-len
     }
 
     return defaultConfig({ ...defaultPaths, ...paths }, config);
