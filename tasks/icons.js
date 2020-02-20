@@ -20,7 +20,9 @@ const iconsAppTask = (gulp) => function iconsApp() {
     .src(srcApp)
     .pipe(rename({ prefix: iconPrefix }))
     .pipe(cheerio(cheerioCfg))
-    .pipe(imagemin(imageminCfg))
+    .pipe(imagemin([
+      imagemin.svgo(imageminCfg.svgo),
+    ]))
     .pipe(svgstore())
     .pipe(gulp.dest(dest))
     .on('error', handleError);
@@ -40,7 +42,9 @@ const iconsStyleguideTask = (gulp) => function iconsStyleguide() {
     .src(srcStyleguide)
     .pipe(rename({ prefix: `${iconPrefix}sg-` }))
     .pipe(cheerio(cheerioCfg))
-    .pipe(imagemin(imageminCfg))
+    .pipe(imagemin([
+      imagemin.svgo(imageminCfg.svgo),
+    ]))
     .pipe(svgstore())
     .pipe(gulp.dest(dest))
     .on('error', handleError);

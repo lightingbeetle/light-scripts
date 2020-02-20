@@ -12,14 +12,18 @@ const clearCacheTask = () => function clearCache() {
 // Optimize images
 const imagesTask = (gulp) => function images() {
   const {
-    cfg,
+    imageminCfg,
     dest,
     optimizeImages,
     src,
   } = imagesConfig();
 
   return gulp.src(src)
-    .pipe(gulpif(optimizeImages, cache(imagemin(cfg))))
+    .pipe(gulpif(optimizeImages, cache(imagemin([
+      imagemin.gifsicle(imageminCfg.gifsicle),
+      imagemin.mozjpeg(imageminCfg.mozjpeg),
+      imagemin.svgo(imageminCfg.svgo),
+    ]))))
     .pipe(gulp.dest(dest));
 };
 
