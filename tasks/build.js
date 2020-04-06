@@ -47,14 +47,24 @@ const buildSizeAllTask = (gulp) => function buildSizeAll() {
     .pipe(size(all.gulpSizeConfig));
 };
 
-const buildSizeTask = (gulp) => gulp.series(
-  gulp.parallel(
-    buildSizeCssTask(gulp),
-    buildSizeJsTask(gulp),
-    buildSizeImgTask(gulp)
-  ),
-  buildSizeAllTask(gulp)
-);
+const buildSizeTask = (gulp) => function buildSize() {
+  return gulp.series(
+    gulp.parallel(
+      buildSizeCssTask(gulp),
+      buildSizeJsTask(gulp),
+      buildSizeImgTask(gulp)
+    ),
+    buildSizeAllTask(gulp)
+  );
+};
+
+const notifyTask = () => function notify(done) {
+  notifier.notify({
+    title: 'Build',
+    message: 'Build was successful',
+  });
+  done();
+};
 
 // run build in sequence - this shoud be implemented in Gulp 4 natively
 const buildTask = (gulp) => {
@@ -74,13 +84,7 @@ const buildTask = (gulp) => {
     modernizrTask(gulp),
     cacheBustTask(gulp),
     buildSizeAllTask(gulp),
-    (done) => {
-      notifier.notify({
-        title: 'Build',
-        message: 'Build was successful',
-      });
-      done();
-    }
+    notifyTask()
   );
 };
 
