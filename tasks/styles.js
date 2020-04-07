@@ -1,3 +1,4 @@
+const gulp = require('gulp');
 const sass = require('gulp-sass');
 const gulpStylelint = require('gulp-stylelint');
 
@@ -15,7 +16,7 @@ const { browserSync } = require('./browserSync.js');
 const handleError = require('./../utils/handleError.js');
 const { getFlag } = require('./../utils/flags');
 
-const stylesLintTask = (gulp) => function stylesLint() {
+const stylesLintTask = function stylesLint() {
   const {
     lintSrc,
     lintCfg,
@@ -31,7 +32,7 @@ const stylesLintTask = (gulp) => function stylesLint() {
     );
 };
 
-const stylesBuildTask = (gulp) => function stylesBuild() {
+const stylesBuildTask = function stylesBuild() {
   let stylesError = false;
   const {
     autoprefixerCfg,
@@ -74,9 +75,9 @@ const stylesBuildTask = (gulp) => function stylesBuild() {
     );
 };
 
-const stylesTask = (gulp) => gulp.series(
-  stylesLintTask(gulp),
-  stylesBuildTask(gulp)
+const stylesTask = gulp.series(
+  stylesLintTask,
+  stylesBuildTask
 );
 
 module.exports = {

@@ -1,16 +1,14 @@
+
 const gutil = require('gulp-util');
 
 const webpack = require('webpack');
 const _ = require('lodash');
 
 const { scripts: scriptsConfig } = require('./../config.js');
-const { getFlag } = require('./../utils/flags');
 const handleError = require('./../utils/handleError.js');
 const { browserSync } = require('./browserSync');
 
-let firstRun = true;
-
-const scriptsTask = () => function scripts(done) {
+const scriptsTask = function scripts(done) {
   const webpackConfig = _.omit(scriptsConfig(), 'babelConfig');
 
   webpack(webpackConfig, (err, stats) => {
@@ -36,12 +34,7 @@ const scriptsTask = () => function scripts(done) {
       browserSync.reload();
     }
 
-    if (getFlag('isWatch') && firstRun) {
-      firstRun = false;
-      done();
-    } else if (!getFlag('isWatch')) {
-      done();
-    }
+    done();
   });
 };
 

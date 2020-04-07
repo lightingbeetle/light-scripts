@@ -1,3 +1,4 @@
+const gulp = require('gulp');
 const pug = require('gulp-pug');
 const data = require('gulp-data');
 const changed = require('gulp-changed');
@@ -24,7 +25,7 @@ let isYamlError = false;
 
 // Compile pug to html
 
-const templatesBuildTask = (gulp) => function templatesBuild(done) {
+const templatesBuildTask = function templatesBuild(done) {
   const {
     src,
     base,
@@ -110,7 +111,7 @@ const templatesBuildTask = (gulp) => function templatesBuild(done) {
 
 // Concat *.json file to single data.json
 
-const templatesPrepareDataTask = (gulp) => function templatesPrepareData() {
+const templatesPrepareDataTask = function templatesPrepareData() {
   const { src, dataName, dest } = templatesData();
 
   isYamlError = false;
@@ -123,9 +124,9 @@ const templatesPrepareDataTask = (gulp) => function templatesPrepareData() {
     .pipe(gulp.dest(dest));
 };
 
-const templatesTask = (gulp) => gulp.series(
-  templatesPrepareDataTask(gulp),
-  templatesBuildTask(gulp)
+const templatesTask = gulp.series(
+  templatesPrepareDataTask,
+  templatesBuildTask
 );
 
 module.exports = {

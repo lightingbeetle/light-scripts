@@ -1,3 +1,4 @@
+const gulp = require('gulp');
 const size = require('gulp-size');
 const notifier = require('node-notifier');
 const { argv } = require('yargs');
@@ -16,7 +17,7 @@ const { modernizrTask } = require('./modernizr');
 const { cacheBustTask } = require('./cacheBust');
 
 // Output size of dist folder
-const buildSizeCssTask = (gulp) => function buildSizeCss() {
+const buildSizeCssTask = function buildSizeCss() {
   const { css } = buildSizeConfig();
 
   return gulp.src(css.src)
@@ -24,7 +25,7 @@ const buildSizeCssTask = (gulp) => function buildSizeCss() {
 };
 
 // Output size of dist folder
-const buildSizeJsTask = (gulp) => function buildSizeJs() {
+const buildSizeJsTask = function buildSizeJs() {
   const { js } = buildSizeConfig();
 
   return gulp.src(js.src)
@@ -32,7 +33,7 @@ const buildSizeJsTask = (gulp) => function buildSizeJs() {
 };
 
 // Output size of dist folder
-const buildSizeImgTask = (gulp) => function buildSizeImg() {
+const buildSizeImgTask = function buildSizeImg() {
   const { img } = buildSizeConfig();
 
   return gulp.src(img.src)
@@ -40,53 +41,57 @@ const buildSizeImgTask = (gulp) => function buildSizeImg() {
 };
 
 // Output size of dist folder
-const buildSizeAllTask = (gulp) => function buildSizeAll() {
+const buildSizeAllTask = function buildSizeAll() {
   const { all } = buildSizeConfig();
 
   return gulp.src(all.src)
     .pipe(size(all.gulpSizeConfig));
 };
 
-const buildSizeTask = (gulp) => function buildSize() {
+const buildSizeTask = function buildSize() {
   return gulp.series(
     gulp.parallel(
-      buildSizeCssTask(gulp),
-      buildSizeJsTask(gulp),
-      buildSizeImgTask(gulp)
+      buildSizeCssTask,
+      buildSizeJsTask,
+      buildSizeImgTask
     ),
-    buildSizeAllTask(gulp)
+    buildSizeAllTask
   );
 };
 
-const notifyTask = () => function notify(done) {
-  notifier.notify({
+const notifyTask = function notify(done) {
+  return notifier.notify({
     title: 'Build',
     message: 'Build was successful',
+    timeout: 5,
+  }, () => {
+    done();
   });
-  done();
 };
 
-// run build in sequence - this shoud be implemented in Gulp 4 natively
-const buildTask = (gulp) => {
+function setBuildVars(done) {
   process.env.NODE_ENV = argv.dev ? 'development' : 'production';
   setFlag({ isBuild: true });
+  done();
+}
 
-  return gulp.series(
-    cleanTask(),
-    iconsTask(gulp),
-    gulp.parallel(
-      stylesTask(gulp),
-      scriptsTask(gulp),
-      imagesTask(gulp),
-      copyTask(gulp),
-      templatesTask(gulp)
-    ),
-    modernizrTask(gulp),
-    cacheBustTask(gulp),
-    buildSizeAllTask(gulp),
-    notifyTask()
-  );
-};
+// run build in sequence - this shoud be implemented in Gulp 4 natively
+const buildTask = gulp.series(
+  setBuildVars,
+  cleanTask,
+  iconsTask,
+  gulp.parallel(
+    stylesTask,
+    scriptsTask,
+    imagesTask,
+    copyTask,
+    templatesTask
+  ),
+  modernizrTask,
+  cacheBustTask,
+  buildSizeAllTask,
+  notifyTask
+);
 
 module.exports = {
   buildTask,

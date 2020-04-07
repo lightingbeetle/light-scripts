@@ -7,7 +7,7 @@ browserSyncLib.emitter.on('stream:changed', () => {
 });
 
 // Serve project with livereload
-const browserSyncTask = () => function browserSync(done) {
+const browserSyncTask = function browserSync(done) {
   browserSyncLib.init(browserSyncConfig(), done);
 };
 

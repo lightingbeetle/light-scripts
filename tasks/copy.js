@@ -1,6 +1,7 @@
+const gulp = require('gulp');
 const { copy: copyConfig } = require('./../config.js');
 
-const copyTask = (gulp) => function copy() {
+const copyTask = function copy() {
   const { src, cfg, dest } = copyConfig();
 
   return gulp.src(src, cfg)

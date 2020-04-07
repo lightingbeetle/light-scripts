@@ -1,3 +1,4 @@
+const gulp = require('gulp');
 const svgstore = require('gulp-svgstore');
 const imagemin = require('gulp-imagemin');
 const cheerio = require('gulp-cheerio');
@@ -7,7 +8,7 @@ const { icons: iconsConfig } = require('./../config.js');
 const handleError = require('./../utils/handleError.js');
 
 // App icons
-const iconsAppTask = (gulp) => function iconsApp() {
+const iconsAppTask = function iconsApp() {
   const {
     srcApp,
     iconPrefix,
@@ -29,7 +30,7 @@ const iconsAppTask = (gulp) => function iconsApp() {
 };
 
 // Styleguide icons
-const iconsStyleguideTask = (gulp) => function iconsStyleguide() {
+const iconsStyleguideTask = function iconsStyleguide() {
   const {
     srcStyleguide,
     iconPrefix,
@@ -50,9 +51,9 @@ const iconsStyleguideTask = (gulp) => function iconsStyleguide() {
     .on('error', handleError);
 };
 
-const iconsTask = (gulp) => gulp.parallel(
-  iconsAppTask(gulp),
-  iconsStyleguideTask(gulp)
+const iconsTask = gulp.parallel(
+  iconsAppTask,
+  iconsStyleguideTask
 );
 
 module.exports = {

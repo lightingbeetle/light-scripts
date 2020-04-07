@@ -1,5 +1,5 @@
-const { setFlag } = require('./../utils/flags');
-
+const gulp = require('gulp');
+const { setFlag } = require('../utils/flags');
 const { iconsTask } = require('./icons');
 const { stylesTask } = require('./styles');
 const { scriptsTask } = require('./scripts');
@@ -9,26 +9,29 @@ const { browserSyncTask } = require('./browserSync');
 const { watchTask } = require('./watch');
 const { buildTask } = require('./build');
 
-// Serve project with watching and livereload
-const serveTask = (gulp) => {
+function setServeVars(done) {
   setFlag({ isWatch: true });
+  done();
+}
 
-  return gulp.series(
-    iconsTask(gulp),
-    gulp.parallel(
-      stylesTask(gulp),
-      scriptsTask(gulp),
-      templatesTask(gulp)
-    ),
-    modernizrTask(gulp),
-    browserSyncTask(gulp),
-    watchTask(gulp)
-  );
-};
+// Serve project with watching and livereload
+const serveTask = gulp.series(
+  setServeVars,
+  iconsTask,
+  gulp.parallel(
+    stylesTask,
+    scriptsTask,
+    templatesTask
+  ),
+  modernizrTask,
+  browserSyncTask,
+  watchTask
+);
 
-const serveDistTask = (gulp) => gulp.series(
-  buildTask(gulp),
-  browserSyncTask(gulp)
+
+const serveDistTask = gulp.series(
+  buildTask,
+  browserSyncTask
 );
 
 module.exports = {
