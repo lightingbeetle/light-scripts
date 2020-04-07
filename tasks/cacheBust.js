@@ -1,8 +1,9 @@
+const gulp = require('gulp');
 const revAll = require('gulp-rev-all');
-const { cacheBust } = require('./../config.js');
+const { cacheBust: cacheBustConfig } = require('./../config.js');
 
-const cacheBustTask = gulp => () => {
-  const { src, cfg, dest } = cacheBust();
+const cacheBustTask = function cacheBust() {
+  const { src, cfg, dest } = cacheBustConfig();
 
   return gulp.src(src)
     .pipe(revAll.revision(cfg))

@@ -1,18 +1,18 @@
-const browserSync = require('browser-sync').create();
+const browserSyncLib = require('browser-sync').create();
 
 const { browserSync: browserSyncConfig } = require('./../config.js');
 
-browserSync.emitter.on('stream:changed', () => {
-  browserSync.sockets.emit('fullscreen:message:clear');
+browserSyncLib.emitter.on('stream:changed', () => {
+  browserSyncLib.sockets.emit('fullscreen:message:clear');
 });
 
 // Serve project with livereload
-const browserSyncTask = () => () => {
-  browserSync.init(browserSyncConfig());
+const browserSyncTask = function browserSync(done) {
+  browserSyncLib.init(browserSyncConfig(), done);
 };
 
 module.exports = {
-  reload: browserSync.reload,
-  browserSync,
+  reload: browserSyncLib.reload,
+  browserSync: browserSyncLib,
   browserSyncTask,
 };

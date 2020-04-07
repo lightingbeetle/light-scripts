@@ -1,3 +1,4 @@
+const gulp = require('gulp');
 const pug = require('gulp-pug');
 const data = require('gulp-data');
 const changed = require('gulp-changed');
@@ -12,8 +13,8 @@ const yamlMerge = require('gulp-yaml-merge');
 const yaml = require('js-yaml');
 const md5File = require('md5-file');
 
-const { templates, templatesData } = require('./../config.js');
-const browserSync = require('./browserSync').browserSync;
+const { templates: templatesConfig, templatesData } = require('./../config.js');
+const { browserSync } = require('./browserSync');
 const handleError = require('./../utils/handleError.js');
 const { getFlag } = require('./../utils/flags');
 
@@ -24,7 +25,7 @@ let isYamlError = false;
 
 // Compile pug to html
 
-const templatesTask = gulp => (done) => {
+const templatesBuildTask = function templatesBuild(done) {
   const {
     src,
     base,
@@ -33,16 +34,18 @@ const templatesTask = gulp => (done) => {
     pugCfg,
     pugInheritanceCfg,
     dest,
-  } = templates();
+  } = templatesConfig();
 
-  const { dataPath, helpersPath, requires, additionalData } = templatesData();
+  const {
+    dataPath, helpersPath, requires, additionalData,
+  } = templatesData();
 
   // get data file hash with cached data file to determine if file changes
   const dataFileHash = md5File.sync(dataPath);
   // get icon files hashes to determine if icons changed
   const iconsHash = Object
     .keys(iconsPaths)
-    .map(key => iconsPaths[key])
+    .map((key) => iconsPaths[key])
     .reduce((acc, file) => {
       if (fs.existsSync(file)) {
         acc.push(file);
@@ -54,12 +57,12 @@ const templatesTask = gulp => (done) => {
   const isExternalChange = (
     (
       (dataFileHashCache !== null)
-      && (dataFileHashCache !== dataFileHash)
+        && (dataFileHashCache !== dataFileHash)
     )
-    || (
-      (iconsHashCache !== null)
-      && (iconsHashCache !== iconsHash)
-    )
+      || (
+        (iconsHashCache !== null)
+        && (iconsHashCache !== iconsHash)
+      )
   );
 
   dataFileHashCache = dataFileHash;
@@ -72,8 +75,8 @@ const templatesTask = gulp => (done) => {
     .pipe(plumber(handleError))
     .pipe(gulpif(getFlag('isWatch') && !isExternalChange, changed('.tmp', { extension: '.html' })))
     .pipe(gulpif(getFlag('isWatch') && !isExternalChange, cached('pug')))
-    // Do not run pug-inheritance in the first run. It's not needed, because we compile
-    // everything anyway and it takes too much time.
+  // Do not run pug-inheritance in the first run. It's not needed, because we compile
+  // everything anyway and it takes too much time.
     .pipe(
       gulpif(
         getFlag('isWatch') && !isExternalChange && !isFirstRun,
@@ -81,9 +84,9 @@ const templatesTask = gulp => (done) => {
       )
     )
     .pipe(filter(
-      file => (
+      (file) => (
         filterPaths
-          .map(path => path.test(file.relative))
+          .map((path) => path.test(file.relative))
           .reduce((acc, val) => acc || val)
       )
     ))
@@ -91,8 +94,10 @@ const templatesTask = gulp => (done) => {
       const yamlData = yaml.safeLoad(
         fs.readFileSync(dataPath, 'utf8')
       );
-      const helpers = fs.existsSync(helpersPath) ? require(helpersPath) : {}; // eslint-disable-line
-      return Object.assign({}, yamlData, helpers, requires, { iconsPaths }, additionalData);
+        const helpers = fs.existsSync(helpersPath) ? require(helpersPath) : {}; // eslint-disable-line
+      return {
+        ...yamlData, ...helpers, ...requires, iconsPaths, ...additionalData,
+      };
     }))
     .pipe(pug(pugCfg))
     .pipe(gulp.dest(dest))
@@ -106,7 +111,7 @@ const templatesTask = gulp => (done) => {
 
 // Concat *.json file to single data.json
 
-const templatesPrepareDataTask = gulp => () => {
+const templatesPrepareDataTask = function templatesPrepareData() {
   const { src, dataName, dest } = templatesData();
 
   isYamlError = false;
@@ -119,7 +124,13 @@ const templatesPrepareDataTask = gulp => () => {
     .pipe(gulp.dest(dest));
 };
 
+const templatesTask = gulp.series(
+  templatesPrepareDataTask,
+  templatesBuildTask
+);
+
 module.exports = {
   templatesTask,
+  templatesBuildTask,
   templatesPrepareDataTask,
 };

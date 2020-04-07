@@ -1,23 +1,30 @@
+const gulp = require('gulp');
 const imagemin = require('gulp-imagemin');
 const cache = require('gulp-cache');
 const gulpif = require('gulp-if');
 
-const { images } = require('./../config.js');
+const { images: imagesConfig } = require('./../config.js');
 
 // Clear imagemin cache
-const clearCacheTask = () => done => cache.clearAll(done);
+const clearCacheTask = function clearCache() {
+  return cache.clearAll();
+};
 
 // Optimize images
-const imagesTask = gulp => () => {
+const imagesTask = function images() {
   const {
-    cfg,
+    imageminCfg,
     dest,
     optimizeImages,
     src,
-  } = images();
+  } = imagesConfig();
 
   return gulp.src(src)
-    .pipe(gulpif(optimizeImages, cache(imagemin(cfg))))
+    .pipe(gulpif(optimizeImages, cache(imagemin([
+      imagemin.gifsicle(imageminCfg.gifsicle),
+      imagemin.mozjpeg(imageminCfg.mozjpeg),
+      imagemin.svgo(imageminCfg.svgo),
+    ]))))
     .pipe(gulp.dest(dest));
 };
 
