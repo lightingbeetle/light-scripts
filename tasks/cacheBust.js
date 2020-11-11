@@ -5,8 +5,11 @@ const { cacheBust: cacheBustConfig } = require('./../config.js');
 const cacheBustTask = function cacheBust() {
   const { src, cfg, dest } = cacheBustConfig();
 
-  return gulp.src(src)
+  return gulp
+    .src(src)
     .pipe(revAll.revision(cfg))
+    .pipe(gulp.dest(dest))
+    .pipe(revAll.manifestFile())
     .pipe(gulp.dest(dest));
 };
 
