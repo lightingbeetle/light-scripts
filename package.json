@@ -63,7 +63,7 @@
     "md5-file": "~4.0.0",
     "node-notifier": "~6.0.0",
     "postcss-inline-svg": "~4.1.0",
-    "pug": "~2.0.4",
+    "pug": "~3.0.1",
     "vinyl-named": "~1.1.0",
     "webpack": "~4.41.6",
     "yargs": "~15.1.0"
