@@ -295,8 +295,8 @@ const scripts = ({
         ],
       ],
       plugins: [
-        '@babel/plugin-proposal-class-properties',
-        '@babel/plugin-proposal-object-rest-spread',
+        ['@babel/plugin-proposal-class-properties', { loose: false }],
+        ['@babel/plugin-proposal-object-rest-spread', { loose: false }],
       ],
     },
     context: cwd,
