@@ -65,7 +65,7 @@
     "postcss-inline-svg": "~5.0.0",
     "pug": "~3.0.2",
     "vinyl-named": "~1.1.0",
-    "webpack": "~5.48.0",
+    "webpack": "~4.46.0",
     "yargs": "~17.1.0"
   },
   "devDependencies": {
