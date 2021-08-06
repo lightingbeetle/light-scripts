@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const sass = require('gulp-sass');
+const sass = require('gulp-sass')(require('sass'));
 const gulpStylelint = require('gulp-stylelint');
 
 const sourcemaps = require('gulp-sourcemaps');
@@ -11,10 +11,10 @@ const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const inlineSvg = require('postcss-inline-svg');
 
-const { styles: stylesConfig } = require('./../config.js');
-const { browserSync } = require('./browserSync.js');
-const handleError = require('./../utils/handleError.js');
-const { getFlag } = require('./../utils/flags');
+const { styles: stylesConfig } = require('../config');
+const { browserSync } = require('./browserSync');
+const handleError = require('../utils/handleError');
+const { getFlag } = require('../utils/flags');
 
 const stylesLintTask = function stylesLint() {
   const {
