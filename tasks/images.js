@@ -1,5 +1,4 @@
 const gulp = require('gulp');
-const imagemin = require('gulp-imagemin');
 const cache = require('gulp-cache');
 const gulpif = require('gulp-if');
 
@@ -12,20 +11,27 @@ const clearCacheTask = function clearCache() {
 
 // Optimize images
 const imagesTask = function images() {
-  const {
-    imageminCfg,
-    dest,
-    optimizeImages,
-    src,
-  } = imagesConfig();
+  const { imageminCfg, dest, optimizeImages, src } = imagesConfig();
 
-  return gulp.src(src)
-    .pipe(gulpif(optimizeImages, cache(imagemin([
-      imagemin.gifsicle(imageminCfg.gifsicle),
-      imagemin.mozjpeg(imageminCfg.mozjpeg),
-      imagemin.svgo(imageminCfg.svgo),
-    ]))))
-    .pipe(gulp.dest(dest));
+  return import('gulp-imagemin').then(
+    (imagemin) =>
+      console.log(imagemin) ||
+      gulp
+        .src(src)
+        .pipe(
+          gulpif(
+            optimizeImages,
+            cache(
+              imagemin.default([
+                imagemin.gifsicle(imageminCfg.gifsicle),
+                imagemin.mozjpeg(imageminCfg.mozjpeg),
+                imagemin.svgo(imageminCfg.svgo),
+              ])
+            )
+          )
+        )
+        .pipe(gulp.dest(dest))
+  );
 };
 
 module.exports = {
