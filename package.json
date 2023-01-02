@@ -67,7 +67,7 @@
     "pug": "~3.0.2",
     "sass": "^1.49.11",
     "vinyl-named": "~1.1.0",
-    "webpack": "~4.46.0",
+    "webpack": "~5.75.0",
     "yargs": "~17.4.0"
   },
   "devDependencies": {
